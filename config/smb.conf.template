@@ -1,0 +1,9 @@
+[video-queue]
+   comment = YouTube Video Queue
+   path = __QUEUE_DIR__
+   browseable = yes
+   writeable = yes
+   only guest = no
+   create mask = 0644
+   directory mask = 0755
+   valid users = __USER__

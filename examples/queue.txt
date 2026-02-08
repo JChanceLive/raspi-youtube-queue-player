@@ -1,0 +1,8 @@
+# YouTube Queue - Add URLs below (one per line)
+# Lines starting with # are comments (ignored)
+# Blank lines are also ignored
+# Played videos get marked with [PLAYED]
+
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.youtube.com/watch?v=jNQXAC9IVRw
+[PLAYED] https://www.youtube.com/watch?v=9bZkp7q19f0

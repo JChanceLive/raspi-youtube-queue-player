@@ -1,0 +1,16 @@
+[Unit]
+Description=YouTube Queue Player
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__USER__
+Environment=DISPLAY=:0
+Environment=QUEUE_DIR=__QUEUE_DIR__
+ExecStart=/bin/bash __QUEUE_DIR__/scripts/player.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

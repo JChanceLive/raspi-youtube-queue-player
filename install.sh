@@ -68,7 +68,8 @@ echo "  Added $CURRENT_USER to video group"
 echo ""
 echo "[6/10] Setting up systemd service..."
 SERVICE_FILE="/etc/systemd/system/video-player.service"
-sed "s|__USER__|$CURRENT_USER|g; s|__QUEUE_DIR__|$QUEUE_DIR|g" \
+CURRENT_UID=$(id -u)
+sed "s|__USER__|$CURRENT_USER|g; s|__QUEUE_DIR__|$QUEUE_DIR|g; s|__UID__|$CURRENT_UID|g" \
     "$REPO_DIR/config/video-player.service" | sudo tee "$SERVICE_FILE" > /dev/null
 sudo systemctl daemon-reload
 sudo systemctl enable video-player.service

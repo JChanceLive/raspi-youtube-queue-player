@@ -2,7 +2,7 @@
 # deploy.sh - Push script updates FROM Mac TO Pi
 # Usage: ./deploy.sh [user@host] [queue-dir]
 
-PI_HOST="${1:-jopi@raspberrypi.local}"
+PI_HOST="${1:-jopi@10.0.0.25}"
 QUEUE_DIR="${2:-/home/jopi/video-queue}"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -26,6 +26,12 @@ scp "$REPO_DIR/scripts/"*.sh "$PI_HOST:$QUEUE_DIR/scripts/"
 # Make executable
 echo "Setting permissions..."
 ssh "$PI_HOST" "chmod +x $QUEUE_DIR/scripts/*.sh"
+
+# Update service file with Wayland support
+echo "Updating service file..."
+PI_USER=$(echo "$PI_HOST" | cut -d@ -f1)
+PI_UID=$(ssh "$PI_HOST" "id -u")
+ssh "$PI_HOST" "sed 's|__USER__|$PI_USER|g; s|__QUEUE_DIR__|$QUEUE_DIR|g; s|__UID__|$PI_UID|g' /dev/stdin | sudo tee /etc/systemd/system/video-player.service > /dev/null && sudo systemctl daemon-reload" < "$REPO_DIR/config/video-player.service"
 
 # Restart service
 echo "Restarting service..."

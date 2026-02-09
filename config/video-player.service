@@ -1,12 +1,14 @@
 [Unit]
 Description=YouTube Queue Player
-After=network-online.target
+After=network-online.target graphical.target
 Wants=network-online.target
 
 [Service]
 Type=simple
 User=__USER__
 Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/__UID__
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/__UID__/bus
 Environment=QUEUE_DIR=__QUEUE_DIR__
 ExecStart=/bin/bash __QUEUE_DIR__/scripts/player.sh
 Restart=on-failure

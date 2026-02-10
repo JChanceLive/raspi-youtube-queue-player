@@ -17,6 +17,7 @@ FAILURE_BACKOFF=30          # Seconds to wait after max failures
 touch "$QUEUE_FILE"
 
 consecutive_failures=0
+rapid_successes=0
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') $1" | tee -a "$LOG_FILE"
@@ -52,7 +53,7 @@ cleanup_socket() {
 # Mark a URL as [PLAYED] using exact string match (no regex issues)
 mark_played() {
     local url="$1"
-    awk -v url="$url" '{if ($0 == url) print "[PLAYED] " $0; else print}' \
+    awk -v url="$url" '{if (!done && $0 == url) {print "[PLAYED] " $0; done=1} else print}' \
         "$QUEUE_FILE" > "$QUEUE_FILE.tmp" && mv "$QUEUE_FILE.tmp" "$QUEUE_FILE"
 }
 
@@ -86,6 +87,15 @@ while true; do
         # Clean up stale socket before starting
         cleanup_socket
 
+        # Check if a 1080p-or-below format exists before trying to play
+        YT_FORMAT="bestvideo[height<=1080]+bestaudio/best[height<=1080]"
+        if ! yt-dlp -f "$YT_FORMAT" --no-download --print format_id "$NEXT_URL" > /dev/null 2>&1; then
+            log ">>> SKIPPED (no 1080p or below available): $NEXT_URL"
+            echo ">>> No 720p/1080p format available, skipping: $NEXT_URL"
+            mark_played "$NEXT_URL"
+            continue
+        fi
+
         # Mark as played BEFORE starting (prevents replay on crash)
         mark_played "$NEXT_URL"
 
@@ -95,7 +105,7 @@ while true; do
         # Play with mpv + yt-dlp
         # Use ALSA HDMI directly (bypasses PipeWire session issues)
         mpv --input-ipc-server="$MPV_SOCKET" \
-            --ytdl-format="bestvideo[height<=720]+bestaudio/best[height<=720]" \
+            --ytdl-format="$YT_FORMAT" \
             --audio-device=alsa/hdmi:CARD=vc4hdmi,DEV=0 \
             --fullscreen \
             --no-terminal \
@@ -111,6 +121,7 @@ while true; do
         if [ $MPV_EXIT -ne 0 ] && [ $PLAY_DURATION -lt $MIN_PLAY_SECONDS ]; then
             # mpv failed quickly - not a real play
             consecutive_failures=$((consecutive_failures + 1))
+            rapid_successes=0
             log ">>> FAILED (exit=$MPV_EXIT, ${PLAY_DURATION}s, streak=$consecutive_failures): $NEXT_URL"
 
             if [ $consecutive_failures -ge $MAX_RAPID_FAILURES ]; then
@@ -123,9 +134,23 @@ while true; do
                 unmark_played "$NEXT_URL"
                 sleep 3
             fi
-        else
-            # Successful play or user skip (exit 0 + any duration, or long play)
+        elif [ $MPV_EXIT -eq 0 ] && [ $PLAY_DURATION -lt $MIN_PLAY_SECONDS ]; then
+            # Exited OK but suspiciously fast (skip command, yt-dlp silent fail, etc)
+            rapid_successes=$((rapid_successes + 1))
             consecutive_failures=0
+            log ">>> QUICK EXIT (exit=0, ${PLAY_DURATION}s, rapid_streak=$rapid_successes): $NEXT_URL"
+
+            if [ $rapid_successes -ge $MAX_RAPID_FAILURES ]; then
+                # Too many instant "successes" - something is wrong, stop burning queue
+                log ">>> CASCADE PROTECTION: $rapid_successes rapid exits in a row, pausing ${FAILURE_BACKOFF}s"
+                unmark_played "$NEXT_URL"
+                rapid_successes=0
+                sleep $FAILURE_BACKOFF
+            fi
+        else
+            # Normal play (any exit code, played for real)
+            consecutive_failures=0
+            rapid_successes=0
             log ">>> Finished (exit=$MPV_EXIT, ${PLAY_DURATION}s): $NEXT_URL"
         fi
     else

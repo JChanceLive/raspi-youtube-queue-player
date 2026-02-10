@@ -47,6 +47,7 @@ After installation, these commands are available on the Pi:
 | `pause` | Pause current video |
 | `resume` | Resume playback |
 | `skip` | Skip to next video |
+| `replay` | Re-queue all (or specific) played videos |
 | `stop-player` | Stop the player service |
 | `start-player` | Start the player service |
 | `player-status` | Check if player is running |

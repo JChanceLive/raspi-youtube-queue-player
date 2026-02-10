@@ -109,6 +109,7 @@ alias skip='$QUEUE_DIR/scripts/skip.sh'
 alias stop-player='sudo systemctl stop video-player'
 alias start-player='sudo systemctl start video-player'
 alias player-status='sudo systemctl status video-player'
+alias replay='$QUEUE_DIR/scripts/replay.sh'
 alias queue='nano $QUEUE_DIR/queue.txt'
 EOF
     echo "  Added aliases to ~/.bashrc"

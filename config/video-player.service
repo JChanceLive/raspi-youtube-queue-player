@@ -7,6 +7,7 @@ Wants=network-online.target
 Type=simple
 User=__USER__
 Environment=DISPLAY=:0
+Environment=WAYLAND_DISPLAY=wayland-0
 Environment=XDG_RUNTIME_DIR=/run/user/__UID__
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/__UID__/bus
 Environment=QUEUE_DIR=__QUEUE_DIR__

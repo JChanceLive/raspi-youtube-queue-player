@@ -87,15 +87,6 @@ while true; do
         # Clean up stale socket before starting
         cleanup_socket
 
-        # Check if a 1080p-or-below format exists before trying to play
-        YT_FORMAT="bestvideo[height<=1080]+bestaudio/best[height<=1080]"
-        if ! yt-dlp -f "$YT_FORMAT" --no-download --print format_id "$NEXT_URL" > /dev/null 2>&1; then
-            log ">>> SKIPPED (no 1080p or below available): $NEXT_URL"
-            echo ">>> No 720p/1080p format available, skipping: $NEXT_URL"
-            mark_played "$NEXT_URL"
-            continue
-        fi
-
         # Mark as played BEFORE starting (prevents replay on crash)
         mark_played "$NEXT_URL"
 
@@ -105,7 +96,7 @@ while true; do
         # Play with mpv + yt-dlp
         # Use ALSA HDMI directly (bypasses PipeWire session issues)
         mpv --input-ipc-server="$MPV_SOCKET" \
-            --ytdl-format="$YT_FORMAT" \
+            --ytdl-format="bestvideo[height<=1080]+bestaudio/best[height<=1080]" \
             --audio-device=alsa/hdmi:CARD=vc4hdmi,DEV=0 \
             --fullscreen \
             --no-terminal \

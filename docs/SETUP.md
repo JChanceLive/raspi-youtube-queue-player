@@ -21,7 +21,7 @@ Complete walkthrough from unboxing a Raspberry Pi to a working YouTube queue pla
    - **Storage**: Your microSD card
 4. Click the **gear icon** (or Ctrl+Shift+X) for advanced options:
    - **Enable SSH**: Yes (use password authentication)
-   - **Set username and password**: Pick something you'll remember (e.g., `jopi` / your password)
+   - **Set username and password**: Pick something you'll remember
    - **Configure Wi-Fi**: Enter your network name and password
    - **Set locale**: Your timezone
 5. Click **Write** and wait for it to finish
@@ -38,10 +38,10 @@ Complete walkthrough from unboxing a Raspberry Pi to a working YouTube queue pla
 From your Mac/PC terminal:
 
 ```bash
-ssh jopi@raspberrypi.local
+ssh youruser@raspberrypi.local
 ```
 
-Replace `jopi` with the username you set. If `.local` doesn't work, find the Pi's IP address from your router's admin page and use that instead.
+Replace `youruser` with the username you set. If `.local` doesn't work, find the Pi's IP address from your router's admin page and use that instead.
 
 ## Step 4: System Update
 
@@ -111,7 +111,7 @@ After it boots back up (give it 1-2 minutes), if there are URLs in `queue.txt`, 
 Check the service status:
 
 ```bash
-ssh jopi@raspberrypi.local "sudo systemctl status video-player"
+ssh youruser@raspberrypi.local "sudo systemctl status video-player"
 ```
 
 ## Step 9 (Optional): Static IP
@@ -119,8 +119,8 @@ ssh jopi@raspberrypi.local "sudo systemctl status video-player"
 If `raspberrypi.local` is unreliable, set a static IP:
 
 ```bash
-sudo nmcli con mod "preconfigured" ipv4.addresses 10.0.0.25/24
-sudo nmcli con mod "preconfigured" ipv4.gateway 10.0.0.1
+sudo nmcli con mod "preconfigured" ipv4.addresses <YOUR_STATIC_IP>/24
+sudo nmcli con mod "preconfigured" ipv4.gateway <YOUR_GATEWAY_IP>
 sudo nmcli con mod "preconfigured" ipv4.dns "8.8.8.8 8.8.4.4"
 sudo nmcli con mod "preconfigured" ipv4.method manual
 sudo nmcli con up "preconfigured"

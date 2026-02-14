@@ -55,7 +55,7 @@ After installation, these commands are available on the Pi:
 
 **Remote control via SSH:**
 ```bash
-ssh jopi@raspberrypi.local "~/video-queue/scripts/pause.sh"
+ssh youruser@raspberrypi.local "~/video-queue/scripts/pause.sh"
 ```
 
 ## How It Works

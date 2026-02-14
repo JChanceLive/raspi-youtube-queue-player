@@ -2,8 +2,8 @@
 # deploy.sh - Push script updates FROM Mac TO Pi
 # Usage: ./deploy.sh [user@host] [queue-dir]
 
-PI_HOST="${1:-jopi@10.0.0.25}"
-QUEUE_DIR="${2:-/home/jopi/video-queue}"
+PI_HOST="${1:-youruser@raspberrypi.local}"
+QUEUE_DIR="${2:-/home/$(echo "$PI_HOST" | cut -d@ -f1)/video-queue}"
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "=== Deploying to $PI_HOST ==="

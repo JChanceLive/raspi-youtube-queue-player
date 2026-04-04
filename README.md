@@ -1,6 +1,16 @@
+<div align="center">
+
 # Raspberry Pi YouTube Queue Player
 
-Turn your Raspberry Pi into a YouTube TV player. Drop video URLs into a text file, and they play automatically on your TV via HDMI.
+**Turn your Raspberry Pi into a YouTube TV player. Drop URLs into a text file, they play on your TV.**
+
+[![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi-C51A4A?style=flat-square&logo=raspberrypi&logoColor=white)](https://raspberrypi.com)
+[![Shell](https://img.shields.io/badge/shell-Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](#)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+
+[Features](#features) | [Quick Start](#quick-start) | [Controls](#control-playback) | [How It Works](#how-it-works)
+
+</div>
 
 ## Features
 
@@ -125,16 +135,6 @@ bash uninstall.sh
 
 This removes the service, scripts, cron entry, and aliases. Your `queue.txt` is preserved.
 
-## Troubleshooting
-
-See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for common issues like no audio, video stuttering, and Samba connection problems.
-
-## Documentation
-
-- [Full Setup Guide](docs/SETUP.md) - From unboxing to working player
-- [Architecture](docs/ARCHITECTURE.md) - System diagram and component details
-- [Troubleshooting](docs/TROUBLESHOOTING.md) - All known issues and fixes
-
 ## Hardware
 
 - Raspberry Pi 3B+ or newer
@@ -143,6 +143,12 @@ See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for common issues like no
 - Power supply
 - TV with HDMI input
 
+## Documentation
+
+- [Full Setup Guide](docs/SETUP.md) - From unboxing to working player
+- [Architecture](docs/ARCHITECTURE.md) - System diagram and component details
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - All known issues and fixes
+
 ## License
 
-MIT - See [LICENSE](LICENSE)
+[MIT](LICENSE)
